@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+.stopwatch {
+  text-align: center;
+}
+button {
+  background: #fff;
+  backface-visibility: hidden;
+  border-radius: .375rem;
+  border-style: solid;
+  border-width: .125rem;
+  box-sizing: border-box;
+  color: #212121;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Circular,Helvetica,sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  line-height: 1.3;
+  padding: .875rem 1.125rem;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transform: translateZ(0) scale(1);
+  transition: transform .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+button:not(:disabled):hover {
+  transform: scale(1.05);
+}
+
+button:not(:disabled):hover:active {
+  transform: scale(1.05) translateY(.125rem);
+}
+
+button:focus {
+  outline: 0 solid transparent;
+}
+
+button:focus:before {
+  content: "";
+  left: calc(-1*.375rem);
+  pointer-events: none;
+  position: absolute;
+  top: calc(-1*.375rem);
+  transition: border-radius;
+  user-select: none;
+}
+
+button:focus:not(:focus-visible) {
+  outline: 0 solid transparent;
+}
+
+button:focus:not(:focus-visible):before {
+  border-width: 0;
+}
+
+button:not(:disabled):active {
+  transform: translateY(.125rem);
+}
+.display {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.fuuu{
+  background-color: #008080
+}
+body {
+    background-image: url('giff.gif');
+    background-size: cover; /* Adjust as needed */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Ensures the background image remains fixed as the user scrolls */
+    /* Add any other styles you want for the body */
+  }
+button {
+  font-size: 1rem;
+  margin: 0.5rem;
+}
+</style>
+</head>
+<body>
+<div class="fuuu">
+<br>
+<br>
+
+<div class="stopwatch">
+  <div class="display">00:00:00</div>
+  <button class="start">Start</button>
+  <button class="pause">Pause</button>
+  <button class="split">Split</button>
+  <button class="reset">Reset</button>
+</div>
+<script>
+const display = document.querySelector('.display');
+const splitList = document.createElement('ul');
+let timer;
+let startTime;
+let elapsedTime = 0;
+let running = false;
+
+function formatTime(ms) {
+  const date = new Date(ms);
+  return date.toISOString().substr(11, 8);
+}
+
+function updateDisplay() {
+  display.textContent = formatTime(elapsedTime);
+}
+
+function startTimer() {
+  if (!running) {
+    running = true;
+    startTime = Date.now() - elapsedTime;
+    timer = setInterval(function() {
+      elapsedTime = Date.now() - startTime;
+      updateDisplay();
+    }, 10);
+  }
+}
+
+function pauseTimer() {
+  if (running) {
+    running = false;
+    clearInterval(timer);
+  }
+}
+
+function splitTime() {
+  if (running) {
+    const splitItem = document.createElement('li');
+    splitItem.textContent = formatTime(elapsedTime);
+    splitList.appendChild(splitItem);
+  }
+}
+
+function resetTimer() {
+  running = false;
+  clearInterval(timer);
+  elapsedTime = 0;
+  display.textContent = formatTime(elapsedTime);
+  splitList.innerHTML = '';
+}
+
+document.querySelector('.start').addEventListener('click', startTimer);
+document.querySelector('.pause').addEventListener('click', pauseTimer);
+document.querySelector('.split').addEventListener('click', splitTime);
+document.querySelector('.reset').addEventListener('click', resetTimer);
+
+document.body.appendChild(splitList);
+</script>
+<div>
+</body>
+</html>
